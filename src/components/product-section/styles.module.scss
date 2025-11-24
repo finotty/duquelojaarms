@@ -1,0 +1,343 @@
+// Copiando os estilos do featured-products para manter consistência
+.section {
+  padding: 2rem 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto 24px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.subtitleContainer {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto 10px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.subtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: -20px;
+  letter-spacing: 0.6px;
+}
+
+.viewAllButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 2px solid #ffec70;
+  color: #2a2d32;
+  background: #ffec70;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(255, 236, 112, 0.35);
+    background: #ffe24a;
+  }
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ffec70;
+  padding: 40px 0;
+}
+
+.scrollContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.productsScroll {
+  display: flex;
+  gap: 35px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 30px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  flex: 0 0 250px;
+  background: linear-gradient(145deg, #2a2d32, #3a3d42);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  scroll-snap-align: start;
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: #ffec70;
+    box-shadow: 0 15px 25px rgba(255, 236, 112, 0.2);
+  }
+}
+
+.imageContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  margin-bottom: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.favoriteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 5;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+  }
+}
+
+.content {
+  text-align: center;
+}
+
+.productName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #fff;
+  line-height: 1.3;
+  min-height: 2.6rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffec70;
+  margin-bottom: 8px;
+}
+
+.installments {
+  font-size: 0.9rem;
+  color: #b0b0b0;
+  font-weight: 500;
+}
+
+// Modal styles
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: linear-gradient(145deg, #2a2d32, #3a3d42);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 2px solid #ffec70;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.modalImageContainer {
+  flex: 0 0 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.modalContent {
+  flex: 1;
+  color: #fff;
+}
+
+.modalTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #ffec70;
+}
+
+.modalSpecs {
+  margin-bottom: 25px;
+}
+
+.modalSpec {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.modalSpecLabel {
+  font-weight: 600;
+  color: #b0b0b0;
+}
+
+.modalSpecValue {
+  color: #fff;
+  font-weight: 500;
+}
+
+.modalPrice {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffec70;
+  margin-bottom: 10px;
+}
+
+.modalInstallments {
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  margin-bottom: 25px;
+}
+
+.modalBuyButton {
+  background: linear-gradient(135deg, #ffec70, #f4d03f);
+  color: #2a2d32;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 236, 112, 0.4);
+  }
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #fff;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitleContainer {
+    margin-bottom: 0;
+  }
+
+  .modal {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .modalImageContainer {
+    flex: none;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .card {
+    flex: 0 0 280px;
+  }
+}

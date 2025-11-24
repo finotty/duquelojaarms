@@ -1,0 +1,173 @@
+.card {
+  background: #363b41;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 18px 18px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  min-width: 210px;
+  max-width: 220px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transform: translateY(-4px) scale(1.03);
+}
+.topBar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 6px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+.badgeNew {
+  background: #f0b63d;
+  color: #222;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 10px;
+  margin-right: 4px;
+}
+.badgeDiscount {
+  background: #e74c3c;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 10px;
+  margin-right: 4px;
+}
+.favorite {
+  margin-left: auto;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+.imageWrapper {
+  margin: 18px 0 10px 0;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.productImg {
+  object-fit: contain;
+  max-width: 120px;
+  max-height: 80px;
+}
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 8px 0 2px 0;
+}
+.reviews {
+  color: #bdbdbd;
+  font-size: 0.95em;
+  margin-left: 6px;
+}
+.name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.08rem;
+  text-align: center;
+  margin: 10px 0 6px 0;
+}
+.price {
+  color: #f0b63d;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 4px;
+  text-align: center;
+}
+
+// Modal
+.modalOverlay {
+ 
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  background: #23262b;
+  border-radius: 18px;
+  padding: 32px 32px 24px 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+  min-width: 340px;
+  max-width: 50vw;
+  position: relative;
+}
+.modalImg {
+  border-radius: 12px;
+  background: #181a1d;
+  object-fit: contain;
+}
+.modalInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 220px;
+}
+.modalPrice {
+  color: #f0b63d;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 8px 0 8px 0;
+}
+.modalDesc {
+  color: #e0e0e0;
+  font-size: 1.08rem;
+  margin-bottom: 18px;
+}
+.buyBtn {
+  background: #f0b63d;
+  color: #181a1d;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 10px 32px;
+  font-size: 1.08rem;
+  border: none;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.buyBtn:hover {
+  background: #d19e30;
+}
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 2;
+}
+@media (max-width: 700px) {
+  .modal {
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 8px 18px 8px;
+    gap: 18px;
+  }
+  .modalImg {
+    width: 90vw !important;
+    height: auto !important;
+    max-width: 320px;
+  }
+} 

@@ -1,0 +1,192 @@
+.container {
+    min-height: 100vh;
+    background: #2a2d32; /* Cor de fundo similar à seção de destaque */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo para telas maiores */
+    padding: 40px 20px;
+  }
+  
+  .formWrapper {
+    background: #3a3d42; /* Cor de fundo similar aos cards */
+    border-radius: 16px;
+    border: 2px solid #ffec70; /* Borda amarela */
+    padding: 32px;
+    max-width: 600px; /* Largura máxima do formulário */
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  
+    h1 {
+      color: #ffec70; /* Cor do título principal */
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+  
+    h2 {
+      color: #fff; /* Cor dos títulos das seções do formulário */
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.6rem;
+      padding-top: 20px; /* Espaço antes do novo H2 */
+      &:first-of-type { /* Remove padding-top para o primeiro H2 */
+          padding-top: 0;
+      }
+    }
+  
+     p {
+        color: #b0b0b0; /* Cor dos parágrafos descritivos */
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+     }
+  }
+  
+  .stepIndicator {
+     background: #ffec70; /* Cor do indicador de passo */
+     color: #222; /* Cor do número do passo */
+     border-radius: 50%;
+     width: 30px;
+     height: 30px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 1.1rem;
+     font-weight: bold;
+  }
+  
+  .registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  
+    label {
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  
+    input, select {
+      background: #41444a; /* Fundo dos inputs */
+      border: 1.5px solid transparent;
+      border-radius: 5px;
+      padding: 10px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.2s;
+  
+      &:focus {
+        outline: none;
+        border-color: #ffec70; /* Borda amarela ao focar */
+      }
+    }
+  
+     select {
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23b0b0b0%22%20d%3D%22M287%2C69.4a17.6%2C17.6%2C0%2C0%2C0%2D13.2%2D6.4H18.2A17.6%2C17.6%2C0%2C0%2C0%2D5%2C83.2l133.6%2C133.6a17.6%2C17.6%2C0%2C0%2C0%2C25%2C0l133.6%2D133.6A17.6%2C17.6%2C0%2C0%2C0%2C287%2C69.4Z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 10px top 50%;
+        background-size: 12px auto;
+        padding-right: 30px;
+     }
+  }
+  
+  .formRow {
+    display: flex;
+    gap: 15px;
+  
+    .formGroup {
+      flex: 1;
+    }
+  
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  
+  .termsCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 5px; /* Ajuste o espaçamento */
+    }
+  
+    label {
+      font-size: 0.9rem;
+      color: #b0b0b0;
+    }
+  
+    a {
+      color: #ffec70; /* Cor dos links */
+      text-decoration: none;
+  
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .errorMessage {
+    color: #e74c3c; /* Cor de erro */
+    font-size: 0.9rem;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .formActions {
+     display: flex;
+     justify-content: space-between;
+     margin-top: 20px;
+     gap: 15px;
+  
+     button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        flex: 1;
+        text-align: center;
+  
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+     }
+  }
+  
+  .backButton {
+     background: #555; /* Cor do botão voltar */
+     color: #fff;
+     &:hover {
+       background: #666;
+     }
+  }
+  
+  .continueButton {
+     background: #ffec70; /* Cor do botão continuar */
+     color: #222;
+     &:hover {
+       background: #ffd966;
+     }
+  }
+  
+  .loading {
+      text-align: center;
+      color: #fff;
+      font-size: 1.2rem;
+  } 

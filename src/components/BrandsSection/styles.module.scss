@@ -1,0 +1,114 @@
+.brandsSection {
+  padding: 2rem 0;
+  background: #1a1d21;
+  color: #fff;
+  margin-top: 40px;
+
+  h2 {
+    text-align: center;
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.scrollContainer {
+  position: relative;
+  max-width: 89%;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+.brandsScroll {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 1rem 0;
+  justify-content: center;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.brandCard {
+  flex: 0 0 auto;
+  width: 160px;
+  height: 160px;
+  background: #363b41;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border: 2px solid #f0b63d;
+  }
+}
+
+.brandImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #363b41;
+  border: none;
+  color: #f0b63d;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+
+  &:hover {
+    background: #f0b63d;
+    color: #222;
+  }
+
+  &.leftButton {
+    left: 0;
+  }
+
+  &.rightButton {
+    right: 0;
+  }
+}
+
+.loading {
+  text-align: center;
+  color: #fff;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .brandsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .brandImage {
+    max-height: 80px;
+  }
+} 

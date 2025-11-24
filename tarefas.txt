@@ -1,0 +1,34 @@
+----------------- Admin -------------------------------------------------------- 
+1 - Ajustar imagem no card de "Produtos Cadastrados" (resolvido)
+
+2 - Permitir a criação de seção nova ou personalizada em "Cadastrar Produto" (Resolvido)
+
+3 - Permitir exlusão de mensagens na pagina do admin (resolvido)
+
+---------------- Carrinho ------------------------------------------------------
+
+1- Ajustar imagem do item no carrinho (resolvido)
+
+2- Ajustar informações do "Procedimento de compra" e criar Modal para exibir essas
+informações.
+
+---------------- Header --------------------------------------------------------
+
+1 - Ajustar para que o menu só apareça caso tenha algum produto cadastrado.
+exemplo: se não houver nenhum acessório cadastrado, a opção "Acessorio" do
+menu do header não aparece.
+
+---------------- Footer --------------------------------------------------------
+1 - Criar politica de privacidade , Termos de Uso, Devoluão e drogas, Sobre nós,
+dosumentação necessária, como comprar e rastreamento de pedidos.
+
+2- Criar Modal "Perguntas frequentes" e linkar essa opção no footer
+
+---------------- Pagina inicial ------------------------------------------------
+
+
+1- verificar o fluxo : escolher produto -> fazer cadastro -> ir pro carrinho com o produto
+
+2- implementar a avaliação de produtos
+
+3- após finalizar pedido , retornar para tela inicial

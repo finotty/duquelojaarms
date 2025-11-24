@@ -1,0 +1,300 @@
+.section {
+  margin-top: 1.2rem;
+  padding: 2rem 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.scrollContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #363b41;
+  color: #f0b63d;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f0b63d;
+    color: #222;
+  }
+
+  &.leftButton {
+    left: 0;
+  }
+
+  &.rightButton {
+    right: 0;
+  }
+}
+
+.productsScroll {
+  display: flex;
+  gap: 35px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 30px;
+  padding-left: 55px;
+  padding-right: 55px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  flex: 0 0 250px;
+  scroll-snap-align: start;
+  background: #3a3d42;
+  border-radius: 12px;
+  border: 2px solid #ffec70;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  }
+}
+
+.imageContainer {
+  width: 100%;
+  height: 200px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+}
+
+.content {
+  padding: 20px;
+  position: relative;
+}
+
+.productName {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.price {
+  color: #ffec70;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.installments {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.favoriteButton {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+// Modal styles
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: #3a3d42;
+  border-radius: 16px;
+  border: 2px solid #ffec70;
+  display: flex;
+  gap: 32px;
+  padding: 32px;
+  max-width: 900px;
+  width: 100%;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+}
+
+.modalImageContainer {
+  flex: 1;
+  min-width: 300px;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  @media (max-width: 768px) {
+    min-width: 100%;
+  }
+}
+
+.modalContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalTitle {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.modalSpecs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.modalSpec {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modalSpecLabel {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.modalSpecValue {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.modalPrice {
+  color: #ffec70;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 8px 0 4px 0;
+}
+
+.modalInstallments {
+  color: #b0b0b0;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.modalBuyButton {
+  background: #ffec70;
+  color: #222;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto;
+
+  &:hover {
+    background: #ffd966;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Media queries para responsividade
+@media (max-width: 768px) {
+  .scrollContainer {
+    width: 95%;
+  }
+} 

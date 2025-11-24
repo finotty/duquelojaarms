@@ -1,0 +1,122 @@
+.section {
+  margin: 48px auto 0 auto;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title {
+  color: #fff;
+  font-size: 2.1rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.grid {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.card {
+  position: relative;
+  width: 340px;
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  background: #222;
+  display: flex;
+  align-items: flex-end;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-8px);
+    border-color: #ffec70;
+    box-shadow: 0 15px 25px rgba(255, 236, 112, 0.2);
+}
+.imgWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.bgImg {
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+.info {
+  position: relative;
+  z-index: 2;
+  padding: 24px 18px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.catName {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-shadow: 1px 2px 8px #000;
+}
+.moreLink {
+  color: #f0b63d;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+.moreLink:hover {
+  color: #fff;
+}
+.btnWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+.moreBtn {
+  background: none;
+  color: #f0b63d;
+  border: 1.5px solid #f0b63d;
+  border-radius: 8px;
+  padding: 8px 32px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.moreBtn:hover {
+  background: #f0b63d;
+  color: #23262b;
+}
+@media (max-width: 1100px) {
+  .grid {
+    gap: 18px;
+  }
+  .card {
+    width: 98vw;
+    max-width: 340px;
+  }
+}
+@media (max-width: 700px) {
+  .section {
+    margin: 32px auto 0 auto;
+  }
+  .title {
+    font-size: 1.3rem;
+  }
+  .grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .card {
+    width: 98vw;
+    max-width: 340px;
+    height: 180px;
+  }
+} 
