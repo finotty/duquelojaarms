@@ -297,4 +297,77 @@
   .scrollContainer {
     width: 95%;
   }
-} 
+
+  .modalOverlay {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .modal {
+    flex-direction: column;
+    width: 92vw;
+    max-width: 92vw;
+    max-height: 92vh;
+    padding: 18px 16px;
+    gap: 16px;
+    border-radius: 16px;
+  }
+
+  .modalImageContainer {
+    flex: none;
+    width: 100%;
+    padding: 8px;
+    max-height: 190px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .modalImageContainer :global(img) {
+    max-height: 160px;
+    width: auto;
+  }
+
+  .modalTitle {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .modalSpecs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .modalSpec {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border-bottom: none;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .modalPrice {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .modalInstallments {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .modalBuyButton {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .modalCloseButton {
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #ffec70;
+    color: #ffec70;
+  }
+}

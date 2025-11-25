@@ -190,6 +190,7 @@ export default function Header() {
     }
 
     addToCart({
+      id: product.id,
       image: product.image,
       name: product.name,
       price: new Intl.NumberFormat('pt-BR', {
@@ -380,7 +381,17 @@ export default function Header() {
           </button>
         )}
         <div className={styles.logoArea} onClick={() => handleNavigate("/")}>
-          <Image src={logo} alt="Logo" width={250} height={60} quality={100} className={styles.logoImg} />
+          <Image
+            src={logo}
+            alt="Logo Duque Armas"
+            width={220}
+            height={52}
+            quality={100}
+            priority
+            sizes="(max-width: 600px) 150px, (max-width: 900px) 180px, 220px"
+            className={styles.logoImg}
+            style={{ width: "100%", height: "auto" }}
+          />
         </div>
       </div>
       <nav

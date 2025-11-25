@@ -42,6 +42,58 @@
   letter-spacing: 0.6px;
 }
 
+.swipeHint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  color: #ffec70;
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.85;
+
+  svg {
+    font-size: 1.1rem;
+    animation: swipeHint 2s ease-in-out infinite;
+  }
+
+  svg:first-child {
+    animation-name: swipeHintLeft;
+  }
+
+  svg:last-child {
+    animation-name: swipeHintRight;
+  }
+
+  @keyframes swipeHintLeft {
+    0%, 100% {
+      opacity: 0.6;
+      transform: translateX(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(-4px);
+    }
+  }
+
+  @keyframes swipeHintRight {
+    0%, 100% {
+      opacity: 0.6;
+      transform: translateX(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
 .viewAllButton {
   display: inline-flex;
   align-items: center;
@@ -59,6 +111,15 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(255, 236, 112, 0.35);
     background: #ffe24a;
+  }
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    gap: 4px;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -90,6 +151,11 @@
 
   &::-webkit-scrollbar {
     display: none;
+  }
+  @media (max-width: 768px) {
+      
+    padding-left: 40px;
+      
   }
 }
 
@@ -323,21 +389,80 @@
     margin-bottom: 0;
   }
 
+  .modalOverlay {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
   .modal {
     flex-direction: column;
-    padding: 20px;
+    width: 92vw;
+    max-width: 92vw;
+    max-height: 92vh;
+    padding: 18px 16px;
+    gap: 16px;
+    border-radius: 16px;
   }
 
   .modalImageContainer {
     flex: none;
     width: 100%;
+    padding: 8px;
+    max-height: 190px;
+    display: flex;
+    justify-content: center;
   }
 
-  .title {
-    font-size: 2rem;
+  .modalImageContainer :global(img) {
+    max-height: 160px;
+    width: auto;
+  }
+
+  .modalTitle {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .modalSpecs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .modalSpec {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border-bottom: none;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .modalPrice {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .modalInstallments {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .modalBuyButton {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .modalCloseButton {
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #ffec70;
+    color: #ffec70;
   }
 
   .card {
-    flex: 0 0 280px;
+    flex: 0 0 260px;
   }
 }

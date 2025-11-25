@@ -9,17 +9,77 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from "../../context/AuthContext";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import * as produtosData from "../../data/products";
-import { getFirestore, doc, getDoc, addDoc, collection } from "firebase/firestore";
+import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import emailjs from 'emailjs-com';
+
+// Cache para produtos do Firebase
+let firebaseProductsCache: any[] | null = null;
+
+async function getProductFromFirebase(id: string): Promise<any> {
+  try {
+    // Se já temos cache, usa ele
+    if (!firebaseProductsCache) {
+      const dados = getFirestore(db.app);
+      
+      // Buscar produtos da coleção 'products'
+      const productsRef = collection(dados, "products");
+      const productsSnapshot = await getDocs(productsRef);
+      const productsData = productsSnapshot.docs.map((doc: any) => ({
+        id: doc.id,
+        firestoreId: doc.id,
+        ...doc.data()
+      }));
+
+      // Buscar produtos personalizados da coleção 'customProducts'
+      const customProductsRef = collection(dados, "customProducts");
+      const customProductsSnapshot = await getDocs(customProductsRef);
+      const customProductsData = customProductsSnapshot.docs.map((doc: any) => ({
+        id: doc.id,
+        firestoreId: doc.id,
+        ...doc.data()
+      }));
+
+      firebaseProductsCache = [...productsData, ...customProductsData];
+    }
+
+    // Buscar por ID ou firestoreId
+    return firebaseProductsCache.find((p: any) => p.id === id || p.firestoreId === id);
+  } catch (error) {
+    console.error('Erro ao buscar produto do Firebase:', error);
+    return null;
+  }
+}
+
+function getProductDataById(id: string) {
+  const preConfigured = produtosData.preConfiguredProducts.find((p: any) => p.id === id);
+  const esporte = produtosData.sportEquipment.find((p: any) => p.id === id);
+  const tactical = produtosData.tacticalEquipment.find((p: any) => p.id === id);
+  return preConfigured || tactical || esporte;
+}
 
 function getProductDataByName(name: string) {
   const preConfigured = produtosData.preConfiguredProducts.find((p: any) => p.name === name);
   const esporte = produtosData.sportEquipment.find((p: any) => p.name === name);
   const tactical = produtosData.tacticalEquipment.find((p: any) => p.name === name);
   return preConfigured || tactical || esporte;
+}
+
+async function getProductData(item: { id?: string; name: string }) {
+  // Tenta buscar por ID primeiro (mais confiável)
+  if (item.id) {
+    // Primeiro tenta nos dados pré-configurados
+    const productById = getProductDataById(item.id);
+    if (productById) return productById;
+    
+    // Se não encontrar, tenta no Firebase
+    const productFromFirebase = await getProductFromFirebase(item.id);
+    if (productFromFirebase) return productFromFirebase;
+  }
+  // Se não encontrar por ID, tenta por nome
+  return getProductDataByName(item.name);
 }
 
 const perguntasFrequentes = [
@@ -102,6 +162,7 @@ export default function Carrinho() {
   const [formaPagamento, setFormaPagamento] = useState('Cartão de crédito');
   const [parcelas, setParcelas] = useState(1);
   const [telefone, setTelefone] = useState<string | null>(null);
+  const [productsSpecs, setProductsSpecs] = useState<Record<number, Record<string, string>>>({});
 
   // Estados para o zoom
   const [zoomActive, setZoomActive] = useState(false);
@@ -161,6 +222,53 @@ export default function Carrinho() {
       fetchUserData();
     }
   }, [user]);
+
+  // Buscar especificações dos produtos do carrinho
+  useEffect(() => {
+    const fetchSpecs = async () => {
+      const specsMap: Record<number, Record<string, string>> = {};
+      
+      for (let idx = 0; idx < cart.length; idx++) {
+        const item = cart[idx];
+        
+        // Se já tem specifications no item, usa ele
+        if (item.specifications && Object.keys(item.specifications).length > 0) {
+          specsMap[idx] = Object.fromEntries(
+            Object.entries(item.specifications).filter(
+              ([_, v]) => typeof v === 'string' && v !== undefined && v.trim() !== ''
+            )
+          ) as Record<string, string>;
+          continue;
+        }
+        
+        // Tenta buscar nos dados do produto
+        try {
+          const productData = await getProductData(item);
+          if (productData?.specifications) {
+            const filteredSpecs = Object.fromEntries(
+              Object.entries(productData.specifications).filter(
+                ([_, v]) => typeof v === 'string' && v !== undefined && v.trim() !== ''
+              )
+            ) as Record<string, string>;
+            
+            if (Object.keys(filteredSpecs).length > 0) {
+              specsMap[idx] = filteredSpecs;
+            }
+          }
+        } catch (error) {
+          console.error(`Erro ao buscar especificações do produto ${item.name}:`, error);
+        }
+      }
+      
+      setProductsSpecs(specsMap);
+    };
+
+    if (cart.length > 0) {
+      fetchSpecs();
+    } else {
+      setProductsSpecs({});
+    }
+  }, [cart]);
 
   const total = cart.reduce((acc, item) => {
     let valorNumerico = typeof item.price === 'number'
@@ -262,7 +370,8 @@ export default function Carrinho() {
             <div className={styles.emptyCartMsg}>Seu carrinho está vazio.</div>
           ) : (
             cart.map((item, idx) => {
-              const productData = getProductDataByName(item.name);
+              // Busca síncrona para o código do produto (usa dados pré-configurados)
+              const productData = item.id ? getProductDataById(item.id) : getProductDataByName(item.name);
               let valorNumerico = typeof item.price === 'number'
                 ? item.price
                 : parseFloat(String(item.price)
@@ -277,7 +386,7 @@ export default function Carrinho() {
                   <div className={styles.productImageArea}>
                     <div
                       ref={imageRef}
-                      style={{ width: '520px', height: '420px', position: 'relative' }}
+                      className={styles.productImageContainer}
                       onMouseEnter={() => {
                         setZoomActive(true);
                         setZoomImage(item.image);
@@ -301,7 +410,6 @@ export default function Carrinho() {
                         image={item.image}
                         alt={item.name}
                         className={styles.productImageGrande}
-                        style={{ width: '520px', height: '420px' }}
                         
                       />
                       {/* Modal de Zoom */}
@@ -447,12 +555,12 @@ export default function Carrinho() {
           <div className={styles.productDescriptionBox}>
             <h3 className={styles.productDescriptionBoxTitle}>Descrição do Produto</h3>
             {cart.map((item, idx) => {
-              // Se o produto tem specifications no próprio item, use ele (personalizado)
-              const specs = item.specifications || getProductDataByName(item.name)?.specifications;
+              const specs = productsSpecs[idx];
+              
               return (
                 <div key={idx} className={styles.productDescription}>
                   <h4>{item.name}</h4>
-                  {specs && (
+                  {specs && Object.keys(specs).length > 0 ? (
                     <div className={styles.specifications}>
                       {Object.entries(specs).map(([key, value]) => (
                         <div key={key} className={styles.specification}>
@@ -461,6 +569,10 @@ export default function Carrinho() {
                         </div>
                       ))}
                     </div>
+                  ) : (
+                    <p style={{ color: '#b0b0b0', fontStyle: 'italic' }}>
+                      Especificações não disponíveis para este produto.
+                    </p>
                   )}
                 </div>
               );
@@ -502,7 +614,7 @@ export default function Carrinho() {
         <div className={styles.purchaseProcedureSection}>
           <h2>Procedimento Compra de Arma de Fogo</h2>
           <ol>
-          <li>
+            <li>
               <strong>Compra:</strong> O primeiro processo é o de compra, onde o usuário poderá escolher o modelo da arma desejada e aguardar as informações contratuais e da loja para prosseguir com a autorização de compra. Antes de realizar a compra da arma o cliente deverá entrar em contato e confirmar a disponibilidade de envio da arma para sua região.
             </li>
             <li>

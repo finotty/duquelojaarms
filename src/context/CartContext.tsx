@@ -5,6 +5,7 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 export interface CartProduct {
+  id?: string;
   image: string;
   name: string;
   price: string;

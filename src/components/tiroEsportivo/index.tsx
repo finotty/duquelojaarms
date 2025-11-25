@@ -74,6 +74,7 @@ export function TiroEsportivos() {
     }
 
     addToCart({
+      id: product.id,
       image: product.image,
       name: product.name,
       price: new Intl.NumberFormat('pt-BR', {

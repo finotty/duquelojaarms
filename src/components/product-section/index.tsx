@@ -8,7 +8,7 @@ import ProductImage from "../ProductImage";
 import { ProductCard } from "../ProductCard";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface ProductSectionProps {
   sectionName: string;
@@ -72,6 +72,7 @@ export function ProductSection({
     }
 
     addToCart({
+      id: product.id,
       image: product.image,
       name: product.name,
       price: new Intl.NumberFormat('pt-BR', {
@@ -101,6 +102,11 @@ export function ProductSection({
       {subtitle && (
         <div className={styles.subtitleContainer}>
           <p className={styles.subtitle}>{subtitle}</p>
+          <div className={styles.swipeHint}>
+            <FaChevronLeft />
+            <span>Arraste para ver mais produtos</span>
+            <FaChevronRight />
+          </div>
         </div>
       )}
       <div className={styles.scrollContainer}>

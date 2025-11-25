@@ -103,12 +103,35 @@
 }
 
 @media (max-width: 768px) {
-  .brandsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  .scrollContainer {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .brandsScroll {
+    justify-content: flex-start;
     gap: 1rem;
   }
 
+  .brandCard {
+    width: 120px;
+    height: 120px;
+    padding: 0.75rem;
+  }
+
   .brandImage {
-    max-height: 80px;
+    max-height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brandCard {
+    width: 100px;
+    height: 100px;
+  }
+
+  .brandImage {
+    padding: 0.35rem;
+    max-height: 60px;
   }
 } 

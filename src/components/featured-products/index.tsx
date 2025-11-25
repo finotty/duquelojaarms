@@ -8,7 +8,7 @@ import ProductImage from "../ProductImage";
 import { ProductCard } from "../ProductCard";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export function FeaturedProducts() {
   const { products, loading } = useProducts('destaques');
@@ -59,6 +59,7 @@ export function FeaturedProducts() {
     }
 
     addToCart({
+      id: product.id,
       image: product.image,
       name: product.name,
       price: new Intl.NumberFormat('pt-BR', {
@@ -87,6 +88,11 @@ export function FeaturedProducts() {
         <p className={styles.subtitle}>
           Os melhores produtos selecionados para você
         </p>
+        <div className={styles.swipeHint}>
+          <FaChevronLeft />
+          <span>Arraste para ver mais produtos</span>
+          <FaChevronRight />
+        </div>
       </div>
       <div className={styles.scrollContainer}>
         <div className={styles.productsScroll} ref={scrollRef}>

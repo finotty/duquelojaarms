@@ -71,6 +71,7 @@ export default function ProdutosQuePodemInteressar() {
               className={styles.addBtn}
               onClick={() =>
                 addToCart({
+                  id: p.id,
                   image: typeof p.image === 'object' && 'src' in p.image ? p.image.src : p.image,
                   name: p.name,
                   price: p.price,

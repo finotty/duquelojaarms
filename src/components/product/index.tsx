@@ -37,6 +37,7 @@ export default function Product({
 
   const handleBuy = () => {
     addToCart({
+      id,
       image: typeof image === 'object' && 'src' in image ? image.src : image,
       name,
       price,
