@@ -502,17 +502,17 @@ export default function Carrinho() {
         <div className={styles.purchaseProcedureSection}>
           <h2>Procedimento Compra de Arma de Fogo</h2>
           <ol>
-            <li>
+          <li>
               <strong>Compra:</strong> O primeiro processo é o de compra, onde o usuário poderá escolher o modelo da arma desejada e aguardar as informações contratuais e da loja para prosseguir com a autorização de compra. Antes de realizar a compra da arma o cliente deverá entrar em contato e confirmar a disponibilidade de envio da arma para sua região.
             </li>
             <li>
-              <strong>Autorização Deferida:</strong> Após receber o contrato e os dados, o cliente iniciará o processo de autorização de compras junto ao órgão de sua escolha responsável por realizar esse procedimento. Uma vez que a autorização for DEFERIDA, o cliente deverá nos enviar uma cópia nítida escaneada da mesma através do e-mail CONTATO@PESCAECIAARMAS.COM.BR.
+              <strong>Autorização Deferida:</strong> Após receber o contrato e os dados, o cliente iniciará o processo de autorização de compras junto ao órgão de sua escolha responsável por realizar esse procedimento. Uma vez que a autorização for DEFERIDA, o cliente deverá nos enviar uma cópia nítida escaneada da mesma através do e-mail CONTATO@DUQUEARMAS.COM.
             </li>
             <li>
               <strong>Nota:</strong> Ao recebermos a AUTORIZAÇÃO DE COMPRAS e verificarmos se está correta, encaminharemos o pedido ao setor responsável pela emissão das notas fiscais, que será processada em até 07 dias úteis. Com a nota fiscal em mãos, o cliente poderá dar continuidade ao processo de registro da arma de fogo.
             </li>
             <li>
-              <strong>Registro Deferido:</strong> Após o deferimento do registro, o cliente deverá enviar, via e-mail para CONTATO@PESCAECIAARMAS.COM.BR, uma cópia escaneada e nítida do seu registro emitido pelo Exército ou Polícia Federal, juntamente com um documento de identificação com foto, como RG, CNH ou documento funcional. Após o envio dos documentos, o cliente aguardará o contato do SETOR RESPONSÁVEL, que ocorrerá em até 24 horas, via WhatsApp ou e-mail. Esse contato será feito para organizar todas as questões referentes ao envio da arma.
+              <strong>Registro Deferido:</strong> Após o deferimento do registro, o cliente deverá enviar, via e-mail para CONTATO@DUQUEARMAS.COM, uma cópia escaneada e nítida do seu registro emitido pelo Exército ou Polícia Federal, juntamente com um documento de identificação com foto, como RG, CNH ou documento funcional. Após o envio dos documentos, o cliente aguardará o contato do SETOR RESPONSÁVEL, que ocorrerá em até 24 horas, via WhatsApp ou e-mail. Esse contato será feito para organizar todas as questões referentes ao envio da arma.
             </li>
           </ol>
         </div>
