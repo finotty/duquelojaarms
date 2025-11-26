@@ -47,7 +47,7 @@ interface Product {
 }
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const router = useRouter();
   const { favorites, removeFromFavorites } = useFavorites();
   const { addToCart, cart, removeFromCart } = useCart();
@@ -332,19 +332,23 @@ export default function Dashboard() {
                 userOrders.map((order) => (
                   <div key={order.id} className={styles.orderCard} onClick={() => setSelectedOrder(order)}>
                     <div className={styles.orderCardImageCol}>
-                      <ProductImage image={order.products?.[0]?.image} alt={order.products?.[0]?.name} style={{width: 120, height: 105}} />
+                      <ProductImage image={order.products?.[0]?.image} alt={order.products?.[0]?.name} />
+                    <div className={styles.orderCardPriceCol}>
+                      <div className={styles.orderCardTotal}>R$ {order.total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                    </div>
                     </div>
                     <div className={styles.orderCardDetailsCol}>
                       <div className={styles.orderCardInfoRow}>
                         <span className={styles.orderCardDate}>Pedido em {order.createdAt?.seconds ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '--/--/----'}</span>
-                        <span className={styles.orderCardTotal}>Total: <strong style={{ color: '#f0b63d' }}>R$ {order.total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></span>
                         <span className={styles.orderCardStatus}>{order.status}</span>
                       </div>
-                      <div style={{ color: '#b0b0b0', fontSize: 13, marginBottom: 2, textAlign: 'left' }}>Produtos:</div>
+                      <div className={styles.orderCardProductsLabel}>Produtos:
+
                       <div className={styles.orderCardProductsList}>
                         {order.products?.map((prod: any, idx: number) => (
-                          <span key={idx} className={styles.orderCardProductName}>{prod.name} (Qtd: {prod.quantity})</span>
+                          <span key={idx} className={styles.orderCardProductName}>{prod.name}</span>
                         ))}
+                      </div>
                       </div>
                     </div>
                     <div className={styles.orderCardActionsCol}>
@@ -367,44 +371,52 @@ export default function Dashboard() {
                 <div className={styles.modal} onClick={e => e.stopPropagation()}>
                   <button className={styles.closeButton} onClick={() => setSelectedOrder(null)}>×</button>
                   <div className={styles.modalTitle}>Detalhes do Pedido</div>
-                  <div className={styles.modalSection}>
-                    <span className={styles.modalLabel}>Data:</span>
-                    <span className={styles.modalValue}>{selectedOrder.createdAt?.seconds ? new Date(selectedOrder.createdAt.seconds * 1000).toLocaleString('pt-BR') : ''}</span>
-                  </div>
-                  <div className={styles.modalSection}>
-                    <span className={styles.modalLabel}>Status:</span>
-                    <span className={styles.modalValue}>{selectedOrder.status}</span>
-                  </div>
-                  <div className={styles.modalSection}>
-                    <span className={styles.modalLabel}>Total:</span>
-                    <span className={styles.modalValue}>R$ {selectedOrder.total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <div className={styles.modalInfoRow}>
+                    <div className={styles.modalInfoItem}>
+                      <span className={styles.modalLabel}>Data</span>
+                      <span className={styles.modalValue}>{selectedOrder.createdAt?.seconds ? new Date(selectedOrder.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : ''}</span>
+                    </div>
+                    <div className={styles.modalInfoItem}>
+                      <span className={styles.modalLabel}>Status</span>
+                      <span className={styles.modalValue}>{selectedOrder.status}</span>
+                    </div>
+                    <div className={styles.modalInfoItem}>
+                      <span className={styles.modalLabel}>Total</span>
+                      <span className={styles.modalValue}>R$ {selectedOrder.total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                    </div>
                   </div>
                   <div className={styles.modalPagamento}>
-                    Forma de Pagamento: {selectedOrder.formaPagamento}
+                    {selectedOrder.formaPagamento}
                   </div>
                   <div className={styles.modalSection}>
-                    <div className={styles.modalLabel} style={{marginBottom: 6}}>Produtos:</div>
+                    <div className={styles.modalLabel}>Produtos:</div>
                     <div className={styles.modalOrderProducts}>
                       {selectedOrder.products?.map((prod: any, idx: number) => (
                         <div key={idx} className={styles.modalOrderProductCard}>
-                          <ProductImage image={prod.image} alt={prod.name} style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4, background: '#fff' }} />
-                          <strong>{prod.name}</strong>
-                          <div>Qtd: <span className={styles.modalValue}>{prod.quantity}</span></div>
-                          <div>Preço: <span className={styles.modalValue}>{prod.price}</span></div>
-                          {selectedOrder.formaPagamento === 'Cartão de crédito' && (
-                            <div style={{color:'#1976d2', fontWeight:600, fontSize:'0.97rem'}}>Parcelas: {prod.parcelas}x de {(typeof prod.price === 'number' ? prod.price : parseFloat(String(prod.price).replace('R$', '').replace('.', '').replace(',', '.'))/prod.parcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
-                          )}
+                          <ProductImage image={prod.image} alt={prod.name} style={{ width: 50, height: 50, objectFit: 'contain', borderRadius: 4, background: '#fff' }} />
+                          <div className={styles.modalProductInfo}>
+                            <strong>{prod.name}</strong>
+                            <div className={styles.modalProductDetails}>
+                            
+                              <span>{prod.price}</span>
+                            </div>
+                            {selectedOrder.formaPagamento === 'Cartão de crédito' && (
+                              <div className={styles.modalParcelas}>{prod.parcelas}x de {(typeof prod.price === 'number' ? prod.price : parseFloat(String(prod.price).replace('R$', '').replace('.', '').replace(',', '.'))/prod.parcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className={styles.modalContato}>
-                    <strong>Contato:</strong><br/>
-                    Email: <a href={`mailto:${selectedOrder.user?.email}`}>{selectedOrder.user?.email}</a><br/>
-                    WhatsApp: <a href={`https://wa.me/?text=Olá, vi seu pedido no site!`}>Abrir WhatsApp</a>
-                  </div>
+                  {isAdmin && (
+                    <div className={styles.modalContato}>
+                      <strong>Contato:</strong>
+                      <a href={`mailto:${selectedOrder.user?.email}`}>{selectedOrder.user?.email}</a>
+                      <a href={`https://wa.me/?text=Olá, vi seu pedido no site!`}>WhatsApp</a>
+                    </div>
+                  )}
                   {selectedOrder.status === 'Pendente' && (
-                    <button className={styles.cancelOrderBtn} style={{ marginTop: 18 }} onClick={() => handleCancelOrder(selectedOrder.id)}>
+                    <button className={styles.cancelOrderBtn} onClick={() => handleCancelOrder(selectedOrder.id)}>
                       Cancelar pedido
                     </button>
                   )}

@@ -60,7 +60,7 @@
   width: auto;
   max-width: 240px;
   height: 100%;
-  max-height: 75px;
+  max-height: 70px;
   object-fit: contain;
   transition: max-width 0.2s ease;
 }
@@ -68,7 +68,7 @@
 .logoArea :global(img) {
   width: auto !important;
   height: 100% !important;
-  max-height: 75px;
+  max-height: 70px;
 }
 .userInfo{
   display: flex;
@@ -161,6 +161,7 @@
   width: 100%;
   padding: 24px 32px 24px 24px;
   gap: 32px;
+ 
 }
 .pistolasList {
   display: flex;
@@ -170,6 +171,7 @@
   max-height: 320px; // Altura total do dropdown
   overflow: hidden; // Remove scroll do container principal
   padding-right: 4px;
+  
 }
 
 .pistolasTitle {
@@ -186,6 +188,7 @@
   background: #3a3d42; // Mesma cor do dropdown para cobrir o conteúdo ao scrollar
   z-index: 10;
   flex-shrink: 0; // Não encolhe
+  
   
   svg {
     color: #ffec70;
@@ -224,6 +227,7 @@
   overflow-x: hidden;
   max-height: calc(320px - 60px); // Altura total menos título e divider (~60px)
   padding-right: 4px;
+  margin-top: 2px;
   
   // Estilizar scrollbar
   &::-webkit-scrollbar {

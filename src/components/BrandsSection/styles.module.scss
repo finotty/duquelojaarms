@@ -10,6 +10,34 @@
     font-size: 2rem;
     margin-bottom: 2rem;
   }
+  @media (max-width: 768px) {
+    margin-top: 0px;
+    h2 {
+      font-size: 1.5rem;
+
+    }
+    .scrollContainer {
+      padding: 0 1rem;
+    }
+    .brandsScroll {
+      gap: 0.5rem;
+    }
+    .brandCard {
+      width: 100px;
+      height: 100px;
+    }
+    .brandImage {
+      max-height: 50px;
+    }
+    .scrollButton {
+      width: 30px;
+      height: 30px;
+      font-size: 0.8rem;
+    }
+    .loading {
+      font-size: 0.8rem;
+    }
+  }
 }
 
 .scrollContainer {
@@ -52,6 +80,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     border: 2px solid #f0b63d;
   }
+
 }
 
 .brandImage {
