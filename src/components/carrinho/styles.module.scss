@@ -224,6 +224,47 @@
   color: #fff;
   font-size: 1.5rem;
   font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 300px;
+
+  &::before {
+    content: '🛒';
+    font-size: 4rem;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .emptyCartMsg {
+    padding: 30px 20px;
+    font-size: 1.2rem;
+    min-height: 250px;
+    gap: 12px;
+
+    &::before {
+      font-size: 3rem;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .emptyCartMsg {
+    padding: 24px 16px;
+    font-size: 1.1rem;
+    min-height: 200px;
+    gap: 10px;
+
+    &::before {
+      font-size: 2.5rem;
+      margin-bottom: 2px;
+    }
+  }
 }
 @media (max-width: 1100px) {
   .cartSection {
@@ -287,10 +328,11 @@
   position: relative;
   
   @media (max-width: 768px) {
-    width: 100%;
+    width: auto;
     max-width: 100%;
     height: auto;
-    max-height: 280px;
+    max-height: 200px;
+    padding: 8px;
   }
 }
 .productImageGrande {
@@ -464,12 +506,21 @@
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 10px;
   }
+  @media (max-width: 768px) {
+    padding: 18px 12px;
+    margin: 16px auto;
+  }
 }
 .productDescriptionBox h3 {
   color: #23262b;
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    font-size: 1.4rem !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 5px !important;
+  }
 }
 .productDescriptionBox p {
   color: #444;
@@ -490,12 +541,21 @@
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 10px;
   }
+  @media (max-width: 768px) {
+    padding: 18px 12px;
+    margin: 16px auto;
+  }
 }
 .faqBox h3 {
   color: #23262b;
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    font-size: 1.4rem !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 5px !important;
+  }
 }
 .faqItem {
   margin-bottom: 10px;
@@ -575,11 +635,12 @@
   justify-content: space-between;
   @media (max-width: 768px) {
     flex-direction: row;
-    //align-items: center !important;
-    justify-content: center !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     width: 100%;
     max-width: 100%;
     height: auto;
+    gap: 12px;
     max-height: 50px !important;
 
     
@@ -659,20 +720,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 8px;
     
     div {
-      width: 100% !important;
+      width: auto !important;
       max-width: 100%;
       height: auto !important;
-      max-height: 280px;
+      max-height: 200px;
+      padding: 8px;
     }
   }
 
   .productImageGrande {
-    width: 100% !important;
+    width: auto !important;
     max-width: 100%;
     height: auto !important;
-    max-height: 280px;
+    max-height: 200px;
     object-fit: contain;
   }
 
@@ -682,29 +745,25 @@
   }
 
   .productInfoAreaTop {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
 
   .productName {
     font-size: 1.4rem;
     line-height: 1.3;
+    flex: 1;
+    margin: 0;
   }
 
   .removeBtn {
-    align-self: flex-end;
+    align-self: center;
     margin-left: 0;
     padding: 6px 8px;
     font-size: 1rem;
-    @media (max-width: 768px) {
-    //  align-self: flex-end !important;
-     // justify-content: flex-start !important;
-      align-items: flex-start !important;
-      margin-left: 0 !important;
-      padding: 6px 8px !important;
-      font-size: 1rem !important;
-    }
+    flex-shrink: 0;
   }
 
   .ratingArea {
@@ -848,6 +907,11 @@
   margin: 24px auto;
   max-width: 1280px;
   width: 90%;
+  @media (max-width: 768px) {
+    width: 98%;
+    padding: 18px 12px;
+    margin: 16px auto;
+  }
 }
 
 .purchaseProcedureSection h2 {
@@ -857,6 +921,11 @@
   margin-bottom: 16px;
   border-bottom: 1px solid #e0e0e0;
   padding-bottom: 10px;
+  @media (max-width: 768px) {
+    font-size: 1.4rem !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 5px !important;
+  }
 }
 
 .purchaseProcedureSection ol {

@@ -561,6 +561,120 @@
   }
 }
 
+@media (max-width: 900px) {
+  .productsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .productsContainer {
+    height: auto;
+    max-height: none;
+    padding-right: 0;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .productCard {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .productInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 0;
+
+    h3 {
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .price {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .section {
+      font-size: 0.85rem;
+      color: #b0b0b0;
+    }
+  }
+
+  .productImage {
+    order: 0;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 110px !important;
+      height: 110px !important;
+      max-width: 110px;
+      max-height: 110px;
+      object-fit: contain;
+    }
+  }
+
+  .actions {
+    order: 2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .editButton,
+  .deleteButton {
+    padding: 10px;
+    flex: 1;
+    max-width: 160px;
+  }
+}
+
+@media (max-width: 520px) {
+  .productCard {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .productInfo h3 {
+    font-size: 0.9rem;
+  }
+
+  .productInfo .price {
+    font-size: 0.95rem;
+  }
+
+  .productImage {
+    padding: 8px;
+
+    img {
+      width: 90px !important;
+      height: 90px !important;
+    }
+  }
+
+  .actions {
+    gap: 10px;
+  }
+
+  .editButton,
+  .deleteButton {
+    max-width: none;
+  }
+}
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -1239,6 +1353,18 @@
   font-weight: 500;
   box-shadow: 0 1px 4px rgba(240,182,61,0.08);
 }
+.ordersContainer {
+  max-height: 720px;
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-top: 12px;
+}
+@media (max-width: 900px) {
+  .ordersContainer {
+    max-height: none;
+    padding-right: 0;
+  }
+}
 .adminOrderModal {
   background: linear-gradient(135deg, #fffbe6 60%, #ffe066 100%);
   border-radius: 20px;
@@ -1362,6 +1488,162 @@
   font-size: 1.01rem;
 }
 
+@media (max-width: 768px) {
+  .productOrderCard {
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    gap: 12px;
+    border-radius: 14px;
+  }
+
+  .productOrderCardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .productOrderCardTitle {
+    font-size: 1rem;
+  }
+
+  .productOrderCardTotal {
+    font-size: 0.95rem;
+  }
+
+  .productOrderCardStatus {
+    align-self: stretch;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    order: 3;
+  }
+
+  .productOrderCardInfo {
+    flex-direction: column;
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+
+  .productOrderCardProducts {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .productOrderCardProduct {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .adminOrderModal {
+    padding: 20px 18px 18px;
+    max-width: 94vw;
+    width: 94vw;
+    max-height: 94vh;
+    overflow-y: auto;
+    border-radius: 16px;
+  }
+
+  .adminOrderModalTitle {
+    font-size: 1.35rem;
+    margin-bottom: 12px;
+  }
+
+  .adminOrderModalSection {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  .adminOrderModalLabel {
+    font-size: 0.95rem;
+  }
+
+  .adminOrderModalValue {
+    font-size: 0.95rem;
+  }
+
+  .adminOrderModalPagamento {
+    width: 100%;
+    text-align: center;
+    font-size: 0.92rem;
+  }
+
+  .adminOrderModalProducts {
+    gap: 10px;
+  }
+
+  .adminOrderModalProductCard {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .adminOrderModalProductImage {
+    width: 100%;
+    height: auto;
+    justify-content: center;
+  }
+
+  .adminOrderModalProductImg {
+    width: 100% !important;
+    max-width: 200px;
+    height: auto !important;
+    margin: 0 auto;
+  }
+
+  .adminOrderModalProductInfo {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .adminOrderModalContato {
+    font-size: 0.92rem;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 540px) {
+  .productOrderCard {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .productOrderCardTitle {
+    font-size: 0.95rem;
+  }
+
+  .productOrderCardTotal {
+    font-size: 0.9rem;
+  }
+
+  .productOrderCardProduct {
+    font-size: 0.85rem;
+  }
+
+  .adminOrderModal {
+    padding: 16px 12px;
+    width: 96vw;
+  }
+
+  .adminOrderModalTitle {
+    font-size: 1.2rem;
+  }
+
+  .adminOrderModalLabel,
+  .adminOrderModalValue {
+    font-size: 0.85rem;
+  }
+
+  .adminOrderModalProductCard {
+    padding: 8px;
+  }
+
+  .adminOrderModalProductImg {
+    max-width: 160px;
+  }
+}
+
 .concluirVendaButton {
   background: #4caf50;
   color: #fff;
@@ -1394,13 +1676,6 @@
     background: #c0392b;
     transform: translateY(-1px);
   }
-} 
-
-.ordersContainer {
-  max-height: 720px;
-  overflow-y: auto;
-  padding-right: 8px;
-  margin-top: 12px;
 } 
 
 .messageDetailsContainer {
@@ -1566,6 +1841,51 @@
   }
 }
 
+@media (max-width: 768px) {
+  .sectionsList {
+    gap: 12px;
+  }
+
+  .sectionItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .sectionInfo {
+    width: 100%;
+
+    h3 {
+      font-size: 1.05rem;
+    }
+  }
+
+  .sectionProductCount {
+    font-size: 0.85rem;
+  }
+
+  .deleteSectionButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .sectionItem {
+    padding: 12px;
+  }
+
+  .sectionInfo h3 {
+    font-size: 1rem;
+  }
+
+  .deleteSectionButton {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+}
+
 // Estilos para modal de exclusão de seção
 .productsToMoveList {
   margin: 20px 0;
@@ -1693,5 +2013,129 @@
 
   .card {
     padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .productRegistration {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .productTypeSelector {
+    flex-direction: column;
+    gap: 10px;
+
+    .typeButton {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .form {
+    padding: 1.2rem 1rem;
+  }
+
+  .formGroup {
+    margin-bottom: 1rem;
+
+    label {
+      font-size: 0.9rem;
+    }
+
+    input,
+    select {
+      font-size: 0.95rem;
+      padding: 0.7rem 0.85rem;
+    }
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropdownToggle {
+    font-size: 0.95rem;
+    padding: 0.85rem;
+  }
+
+  .dropdownMenu {
+    max-height: 260px;
+    top: calc(100% + 4px);
+  }
+
+  .dropdownItem {
+    font-size: 0.92rem;
+    padding: 9px 12px;
+  }
+
+  .productPreview {
+    padding: 1rem;
+  }
+
+  .previewContent {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .productColumn {
+    width: 100%;
+
+    img {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  .brandImage {
+    width: 100px;
+    height: 100px;
+  }
+
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productRegistration {
+    padding: 1rem;
+  }
+
+  .form {
+    padding: 1rem 0.75rem;
+  }
+
+  .formGroup input,
+  .formGroup select {
+    font-size: 0.9rem;
+    padding: 0.65rem 0.8rem;
+  }
+
+  .dropdownToggle {
+    font-size: 0.9rem;
+  }
+
+  .dropdownMenu {
+    max-height: 220px;
+  }
+
+  .specs {
+    grid-template-columns: 1fr;
+  }
+
+  .modalActions {
+    flex-direction: column;
+    gap: 0.75rem;
+
+    button {
+      width: 100%;
+    }
   }
 }

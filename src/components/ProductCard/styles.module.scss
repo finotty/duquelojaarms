@@ -24,6 +24,14 @@
   justify-content: center;
   padding: 16px;
   position: relative;
+
+  :global(img) {
+    max-width: calc(100% - 32px);
+    max-height: calc(100% - 32px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
 }
 
 .content {
@@ -133,28 +141,119 @@
 
 @media (max-width: 768px) {
   .card {
-    width: 205px;
-    min-width: 205px;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .imageContainer {
+    height: 100px;
+    padding: 8px;
+
+    :global(img) {
+      max-width: calc(100% - 16px) !important;
+      max-height: calc(100% - 16px) !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain;
+    }
   }
 
   .content {
-    padding: 16px;
+    padding: 14px;
   }
 
   .productName {
-    font-size: 1.05rem;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    min-height: 2.2rem;
   }
 
   .specs {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .price {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+  }
+
+  .installments {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+
+  .buyButton {
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .imageContainer {
+    height: 90px;
+    padding: 6px;
+
+    :global(img) {
+      max-width: calc(100% - 12px) !important;
+      max-height: calc(100% - 12px) !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain;
+    }
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  .productName {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    min-height: 2rem;
+  }
+
+  .specs {
+    grid-template-columns: repeat(2, 1fr);
     gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .specLabel {
+    font-size: 0.75rem;
+  }
+
+  .specValue {
+    font-size: 0.85rem;
   }
 
   .price {
     font-size: 1.2rem;
+    margin-bottom: 5px;
   }
 
-  .imageContainer {
-    height: 150px;
+  .installments {
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+  }
+
+  .buyButton {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .favoriteButton {
+    top: 4px;
+    right: 4px;
+    font-size: 1.1rem;
+    padding: 6px;
   }
 }

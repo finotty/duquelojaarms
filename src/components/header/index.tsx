@@ -630,11 +630,17 @@ export default function Header() {
                   <span>Olá, {primeiroNome}</span>
                 </div>
                 <div className={styles.menuItems}>
-                  {!isAdmin && <button onClick={() => router.push('/dashboard')}>
+                  {!isAdmin && <button onClick={() => {
+                    router.push('/dashboard');
+                    setUserMenuOpen(false);
+                  }}>
                     <FaTachometerAlt /> Dashboard
                   </button>}
                   {isAdmin && (
-                    <button onClick={() => router.push('/admin')}>
+                    <button onClick={() => {
+                      router.push('/admin');
+                      setUserMenuOpen(false);
+                    }}>
                       <FaCog /> Painel Admin
                     </button>
                   )}
@@ -646,12 +652,18 @@ export default function Header() {
                   <FaShoppingCart /> Carrinho
                   </button>
 
-                  <button onClick={() => router.push('/favoritos')}>
+                  <button onClick={() => {
+                    router.push('/favoritos');
+                    setUserMenuOpen(false);
+                  }}>
                     <FaHeart /> Favoritos
                   </button>
                    
                   
-                  <button onClick={handleLogout}>
+                  <button onClick={() => {
+                    handleLogout();
+                    setUserMenuOpen(false);
+                  }}>
                     <FaSignOutAlt /> Sair
                   </button>
                 </div>
