@@ -2139,3 +2139,139 @@
     }
   }
 }
+
+// Estilos para seção de avaliações
+.reviewsSearchContainer {
+  margin-bottom: 24px;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 236, 112, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #ffec70;
+    box-shadow: 0 4px 12px rgba(255, 236, 112, 0.2);
+  }
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.reviewProductInfo {
+  flex: 1;
+  min-width: 200px;
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: #ffec70;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+}
+
+.reviewUser {
+  margin: 0;
+  color: #b0b0b0;
+  font-size: 0.9rem;
+}
+
+.reviewRating {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.reviewContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reviewComment {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border-left: 3px solid #ffec70;
+}
+
+.reviewFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 236, 112, 0.2);
+}
+
+.reviewDate {
+  color: #b0b0b0;
+  font-size: 0.85rem;
+}
+
+.deleteReviewButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .reviewHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reviewRating {
+    align-self: flex-start;
+  }
+
+  .reviewFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .deleteReviewButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

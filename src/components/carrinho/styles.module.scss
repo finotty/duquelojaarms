@@ -628,6 +628,193 @@
 .avaliacaoComentario {
   color: #444;
   font-size: 1.05rem;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.avaliacaoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.avaliacaoDate {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.noReviews {
+  color: #888;
+  font-size: 1rem;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.addReviewButton {
+  background: linear-gradient(135deg, #ffec70, #f4d03f);
+  color: #2a2d32;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 236, 112, 0.4);
+  }
+}
+
+.reviewForm {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 2px solid #ffec70;
+
+  h4 {
+    color: #23262b;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+}
+
+.ratingInput {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  span {
+    color: #23262b;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+.starRating {
+  display: flex;
+  gap: 4px;
+}
+
+.starButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.reviewCommentInput {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 16px;
+  min-height: 100px;
+
+  &:focus {
+    outline: none;
+    border-color: #ffec70;
+  }
+}
+
+.reviewFormActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.submitReviewButton {
+  background: linear-gradient(135deg, #ffec70, #f4d03f);
+  color: #2a2d32;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 236, 112, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.cancelReviewButton {
+  background: #e0e0e0;
+  color: #23262b;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: #d0d0d0;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviewForm {
+    padding: 16px;
+    
+    h4 {
+      font-size: 1.1rem;
+    }
+  }
+
+  .ratingInput {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .reviewFormActions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+
+  .avaliacaoHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .avaliacaoItem {
+    padding: 12px;
+  }
 }
 .productInfoAreaTop {
   display: flex;
@@ -1210,4 +1397,180 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+// Modal de Avaliações
+.reviewsModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.reviewsModal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.reviewsModalCloseButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #f0b63d;
+  border: 2px solid #ffd700;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #23262b;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(240, 182, 61, 0.3);
+
+  &:hover {
+    background: #ffd700;
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 4px 12px rgba(240, 182, 61, 0.5);
+  }
+}
+
+.reviewsModalTitle {
+  color: #23262b;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  padding-right: 40px;
+}
+
+.reviewsModalList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewsModalItem {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 4px solid #f0b63d;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #fffbe6;
+    box-shadow: 0 4px 12px rgba(240, 182, 61, 0.15);
+  }
+}
+
+.reviewsModalItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.reviewsModalItemUser {
+  flex: 1;
+  min-width: 200px;
+
+  strong {
+    display: block;
+    color: #23262b;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+}
+
+.reviewsModalItemDate {
+  display: block;
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.reviewsModalItemRating {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.reviewsModalItemComment {
+  color: #23262b;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .reviewsModal {
+    padding: 24px 20px;
+    max-width: 95vw;
+    border-radius: 12px;
+    max-height: 90vh;
+  }
+
+  .reviewsModalTitle {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    padding-right: 0;
+  }
+
+  .reviewsModalItem {
+    padding: 16px;
+  }
+
+  .reviewsModalItemHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .reviewsModalItemUser {
+    width: 100%;
+  }
+
+  .reviewsModalItemRating {
+    align-self: flex-start;
+  }
+
+  .reviewsModalItemComment {
+    font-size: 0.95rem;
+    padding-top: 10px;
+  }
 }

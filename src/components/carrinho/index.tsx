@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from "../../context/AuthContext";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import * as produtosData from "../../data/products";
-import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from "firebase/firestore";
+import { getFirestore, doc, getDoc, addDoc, collection, getDocs, query, where, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
@@ -97,23 +97,145 @@ const perguntasFrequentes = [
   },
 ];
 
-const avaliacoesMock = [
-  {
-    nome: "João S.",
-    nota: 5,
-    comentario: "Produto excelente, entrega rápida e atendimento nota 10!",
-  },
-  {
-    nome: "Maria F.",
-    nota: 4,
-    comentario: "Gostei muito, só achei o manual um pouco confuso.",
-  },
-  {
-    nome: "Carlos P.",
-    nota: 5,
-    comentario: "Ótimo custo-benefício, recomendo!",
-  },
-];
+// Interface para avaliações
+interface Review {
+  id?: string;
+  productId: string;
+  productName: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: Timestamp | Date;
+}
+
+// Função para verificar se o usuário comprou o produto
+async function hasUserPurchasedProduct(userId: string, productId: string, productName: string): Promise<boolean> {
+  try {
+    const dados = getFirestore(db.app);
+    const ordersRef = collection(dados, "orders");
+    // Buscar todos os pedidos do usuário (não apenas concluídos)
+    const ordersQuery = query(
+      ordersRef,
+      where("user.uid", "==", userId)
+    );
+    const ordersSnapshot = await getDocs(ordersQuery);
+    
+    for (const orderDoc of ordersSnapshot.docs) {
+      const orderData = orderDoc.data();
+      if (orderData.products && Array.isArray(orderData.products)) {
+        const hasProduct = orderData.products.some((prod: any) => 
+          (productId && prod.id === productId) || prod.name === productName
+        );
+        if (hasProduct) return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    console.error('Erro ao verificar compra do produto:', error);
+    return false;
+  }
+}
+
+// Função para buscar avaliações de um produto
+async function getProductReviews(productId: string, productName: string): Promise<Review[]> {
+  try {
+    const dados = getFirestore(db.app);
+    const reviewsRef = collection(dados, "reviews");
+    
+    const reviews: Review[] = [];
+    const seenIds = new Set<string>();
+    
+    // Buscar por nome do produto (mais confiável)
+    if (productName) {
+      const reviewsByNameQuery = query(
+        reviewsRef,
+        where("productName", "==", productName)
+      );
+      const reviewsByNameSnapshot = await getDocs(reviewsByNameQuery);
+      reviewsByNameSnapshot.forEach((doc) => {
+        if (!seenIds.has(doc.id)) {
+          const reviewData = doc.data();
+          // Se tiver productId, verificar se corresponde
+          // Se não tiver productId na review ou no produto, aceitar se o nome corresponder
+          const reviewProductId = reviewData.productId || '';
+          const searchProductId = productId || '';
+          
+          // Aceitar se:
+          // 1. Ambos têm ID e são iguais
+          // 2. Ambos estão vazios (sem ID)
+          // 3. O produto buscado não tem ID mas a review tem (pode ser o mesmo produto)
+          // 4. A review não tem ID mas o produto tem (pode ser o mesmo produto)
+          if (reviewProductId === searchProductId || 
+              (reviewProductId === '' && searchProductId === '') ||
+              (searchProductId === '' && reviewProductId !== '') ||
+              (reviewProductId === '' && searchProductId !== '')) {
+            reviews.push({
+              id: doc.id,
+              ...reviewData
+            } as Review);
+            seenIds.add(doc.id);
+          }
+        }
+      });
+    }
+    
+    // Se tiver productId e ainda não encontrou, buscar também por ID
+    if (productId && productId.trim() !== '' && reviews.length === 0) {
+      const reviewsQuery = query(
+        reviewsRef,
+        where("productId", "==", productId)
+      );
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+      reviewsSnapshot.forEach((doc) => {
+        if (!seenIds.has(doc.id)) {
+          const reviewData = doc.data();
+          // Verificar se o nome também corresponde
+          if (reviewData.productName === productName) {
+            reviews.push({
+              id: doc.id,
+              ...reviewData
+            } as Review);
+            seenIds.add(doc.id);
+          }
+        }
+      });
+    }
+    
+    // Ordenar por data (mais recentes primeiro)
+    return reviews.sort((a, b) => {
+      const dateA = a.createdAt instanceof Timestamp ? a.createdAt.toMillis() : new Date(a.createdAt).getTime();
+      const dateB = b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : new Date(b.createdAt).getTime();
+      return dateB - dateA;
+    });
+  } catch (error) {
+    console.error('Erro ao buscar avaliações:', error);
+    return [];
+  }
+}
+
+// Função para calcular média de avaliações
+function calculateAverageRating(reviews: Review[]): number {
+  if (reviews.length === 0) return 0;
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return Math.round((sum / reviews.length) * 10) / 10; // Arredonda para 1 casa decimal
+}
+
+// Função para adicionar avaliação
+async function addReview(review: Omit<Review, 'id' | 'createdAt'>): Promise<boolean> {
+  try {
+    const dados = getFirestore(db.app);
+    const reviewsRef = collection(dados, "reviews");
+    await addDoc(reviewsRef, {
+      ...review,
+      createdAt: Timestamp.now()
+    });
+    return true;
+  } catch (error) {
+    console.error('Erro ao adicionar avaliação:', error);
+    return false;
+  }
+}
 
 // Função para enviar e-mail via EmailJS
 const sendOrderEmail = async (order: any) => {
@@ -171,6 +293,15 @@ export default function Carrinho() {
   const [zoomType, setZoomType] = useState<'img' | 'svg' | null>(null);
   const [svgViewBox, setSvgViewBox] = useState<{ width: number; height: number }>({ width: 520, height: 420 });
   const imageRef = useRef<HTMLDivElement | null>(null);
+
+  // Estados para avaliações
+  const [productReviews, setProductReviews] = useState<Record<string, Review[]>>({});
+  const [productRatings, setProductRatings] = useState<Record<string, number>>({});
+  const [canReview, setCanReview] = useState<Record<string, boolean>>({});
+  const [showReviewForm, setShowReviewForm] = useState<Record<string, boolean>>({});
+  const [newReview, setNewReview] = useState<Record<string, { rating: number; comment: string }>>({});
+  const [submittingReview, setSubmittingReview] = useState<Record<string, boolean>>({});
+  const [showReviewsModal, setShowReviewsModal] = useState<string | null>(null); // productKey do produto cujas avaliações estão sendo visualizadas
 
   // Função para extrair o viewBox do SVG
   function extractViewBox(svgString: string): { width: number; height: number } {
@@ -270,6 +401,52 @@ export default function Carrinho() {
     }
   }, [cart]);
 
+  // Buscar avaliações dos produtos e verificar se usuário pode avaliar
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!user || cart.length === 0) {
+        setProductReviews({});
+        setProductRatings({});
+        setCanReview({});
+        return;
+      }
+
+      const reviewsMap: Record<string, Review[]> = {};
+      const ratingsMap: Record<string, number> = {};
+      const canReviewMap: Record<string, boolean> = {};
+
+      for (const item of cart) {
+        // Usar a mesma chave que é usada no dashboard: id_name
+        const productKey = `${item.id || ''}_${item.name}`;
+        
+        // Buscar avaliações
+        const reviews = await getProductReviews(item.id || '', item.name);
+        reviewsMap[productKey] = reviews;
+        
+        // Calcular média
+        const avgRating = calculateAverageRating(reviews);
+        ratingsMap[productKey] = avgRating;
+        
+        // Verificar se usuário já avaliou
+        const userHasReviewed = reviews.some(r => r.userId === user.uid);
+        
+        // Verificar se usuário comprou o produto
+        if (!userHasReviewed) {
+          const hasPurchased = await hasUserPurchasedProduct(user.uid, item.id || '', item.name);
+          canReviewMap[productKey] = hasPurchased;
+        } else {
+          canReviewMap[productKey] = false;
+        }
+      }
+
+      setProductReviews(reviewsMap);
+      setProductRatings(ratingsMap);
+      setCanReview(canReviewMap);
+    };
+
+    fetchReviews();
+  }, [cart, user]);
+
   const total = cart.reduce((acc, item) => {
     let valorNumerico = typeof item.price === 'number'
       ? item.price
@@ -305,6 +482,7 @@ export default function Carrinho() {
 
     // Coletar produtos do carrinho, incluindo parcelas por produto
     const products = cart.map((item, idx) => ({
+      id: item.id || '', // Incluir o ID do produto
       name: item.name,
       image: item.image,
       price: item.price,
@@ -472,8 +650,55 @@ export default function Carrinho() {
                       <button className={styles.removeBtn} title="Remover" onClick={() => removeFromCart(idx)}>🗑️</button>
                     </div>
                     <div className={styles.ratingArea}>
-                      {[1,2,3,4,5].map(i => i <= 4 ? <FaStar key={i} color="#f0b63d" /> : <FaRegStar key={i} color="#f0b63d" />)}
-                      <span className={styles.reviews}>(12 avaliações)</span>
+                      {(() => {
+                        const productKey = `${item.id || ''}_${item.name}`;
+                        const avgRating = productRatings[productKey] || 0;
+                        const reviews = productReviews[productKey] || [];
+                        const roundedRating = Math.round(avgRating);
+                        return [1,2,3,4,5].map(i => 
+                          i <= roundedRating ? 
+                            <FaStar key={i} color="#f0b63d" /> : 
+                            <FaRegStar key={i} color="#f0b63d" />
+                        );
+                      })()}
+                      <span 
+                        className={styles.reviews}
+                        style={{ 
+                          cursor: (() => {
+                            const productKey = `${item.id || ''}_${item.name}`;
+                            const reviews = productReviews[productKey] || [];
+                            return reviews.length > 0 ? 'pointer' : 'default';
+                          })(),
+                          textDecoration: (() => {
+                            const productKey = `${item.id || ''}_${item.name}`;
+                            const reviews = productReviews[productKey] || [];
+                            return reviews.length > 0 ? 'underline' : 'none';
+                          })()
+                        }}
+                        onClick={() => {
+                          const productKey = `${item.id || ''}_${item.name}`;
+                          const reviews = productReviews[productKey] || [];
+                          if (reviews.length > 0) {
+                            setShowReviewsModal(productKey);
+                          }
+                        }}
+                      >
+                        {(() => {
+                          const productKey = `${item.id || ''}_${item.name}`;
+                          const reviews = productReviews[productKey] || [];
+                          const avgRating = productRatings[productKey] || 0;
+                          return (
+                            <>
+                              ({reviews.length} avaliações)
+                              {avgRating > 0 && (
+                                <span style={{ marginLeft: '8px', fontWeight: 600 }}>
+                                  {avgRating.toFixed(1)}
+                                </span>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </span>
                     </div>
                     <div className={styles.productCode}>Cód: {productData?.id || '---'}</div>
                     <div className={styles.productPrice}>
@@ -593,23 +818,175 @@ export default function Carrinho() {
           ))}
         </div>
         {/* Avaliações dos Clientes */}
-        {/*
-        <div className={styles.avaliacoesBox}>
-          <h3 className={styles.avaliacoesBoxTitle}>Avaliações dos Clientes</h3>
-          <div className={styles.avaliacoesList}>
-            {avaliacoesMock.map((av, i) => (
-              <div key={i} className={styles.avaliacaoItem}>
-                <div className={styles.avaliacaoNome}>{av.nome}</div>
-                <div className={styles.avaliacaoNota}>
-                  {[1,2,3,4,5].map(j => j <= av.nota ? <FaStar key={j} color="#f0b63d" /> : <FaRegStar key={j} color="#f0b63d" />)}
+        {cart.length > 0 && cart.map((item, idx) => {
+          const productKey = `${item.id || ''}_${item.name}`;
+          const reviews = productReviews[productKey] || [];
+          const canUserReview = canReview[productKey] || false;
+          const showForm = showReviewForm[productKey] || false;
+          const reviewData = newReview[productKey] || { rating: 0, comment: '' };
+          const isSubmitting = submittingReview[productKey] || false;
+
+          return (
+            <div key={`reviews-${idx}`} className={styles.avaliacoesBox}>
+              <h3 className={styles.avaliacoesBoxTitle}>Avaliações - {item.name}</h3>
+              
+              {/* Formulário de avaliação */}
+              {canUserReview && !showForm && (
+                <button 
+                  className={styles.addReviewButton}
+                  onClick={() => setShowReviewForm({ ...showReviewForm, [productKey]: true })}
+                >
+                  Avaliar este produto
+                </button>
+              )}
+
+              {showForm && user && (
+                <div className={styles.reviewForm}>
+                  <h4>Avaliar {item.name}</h4>
+                  <div className={styles.ratingInput}>
+                    <span>Avaliação:</span>
+                    <div className={styles.starRating}>
+                      {[1,2,3,4,5].map(star => (
+                        <button
+                          key={star}
+                          type="button"
+                          className={styles.starButton}
+                          onClick={() => setNewReview({
+                            ...newReview,
+                            [productKey]: { ...reviewData, rating: star }
+                          })}
+                        >
+                          {star <= reviewData.rating ? 
+                            <FaStar color="#f0b63d" size={24} /> : 
+                            <FaRegStar color="#f0b63d" size={24} />
+                          }
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea
+                    className={styles.reviewCommentInput}
+                    placeholder="Deixe seu comentário sobre o produto..."
+                    value={reviewData.comment}
+                    onChange={(e) => setNewReview({
+                      ...newReview,
+                      [productKey]: { ...reviewData, comment: e.target.value }
+                    })}
+                    rows={4}
+                  />
+                  <div className={styles.reviewFormActions}>
+                    <button
+                      className={styles.submitReviewButton}
+                      onClick={async () => {
+                        if (reviewData.rating === 0 || !reviewData.comment.trim()) {
+                          alert('Por favor, selecione uma avaliação e escreva um comentário.');
+                          return;
+                        }
+
+                        setSubmittingReview({ ...submittingReview, [productKey]: true });
+                        
+                        const dados = getFirestore(db.app);
+                        const userDoc = doc(dados, "users", user.uid);
+                        const userSnapshot = await getDoc(userDoc);
+                        const userName = userSnapshot.exists() ? userSnapshot.data().nomeCompleto : user.email?.split('@')[0] || 'Usuário';
+
+                        const success = await addReview({
+                          productId: item.id || '',
+                          productName: item.name,
+                          userId: user.uid,
+                          userName: userName,
+                          rating: reviewData.rating,
+                          comment: reviewData.comment.trim()
+                        });
+
+                        if (success) {
+                          // Recarregar todas as avaliações de todos os produtos do carrinho
+                          const reviewsMap: Record<string, Review[]> = {};
+                          const ratingsMap: Record<string, number> = {};
+                          const canReviewMap: Record<string, boolean> = { ...canReview };
+
+                          for (const cartItem of cart) {
+                            const cartProductKey = `${cartItem.id || ''}_${cartItem.name}`;
+                            const updatedReviews = await getProductReviews(cartItem.id || '', cartItem.name);
+                            reviewsMap[cartProductKey] = updatedReviews;
+                            ratingsMap[cartProductKey] = calculateAverageRating(updatedReviews);
+                            
+                            // Atualizar canReview apenas para o produto que foi avaliado
+                            if (cartProductKey === productKey) {
+                              canReviewMap[cartProductKey] = false;
+                            } else {
+                              // Verificar se usuário já avaliou
+                              const userHasReviewed = updatedReviews.some(r => r.userId === user.uid);
+                              if (!userHasReviewed) {
+                                const hasPurchased = await hasUserPurchasedProduct(user.uid, cartItem.id || '', cartItem.name);
+                                canReviewMap[cartProductKey] = hasPurchased;
+                              } else {
+                                canReviewMap[cartProductKey] = false;
+                              }
+                            }
+                          }
+
+                          setProductReviews(reviewsMap);
+                          setProductRatings(ratingsMap);
+                          setCanReview(canReviewMap);
+                          setShowReviewForm({ ...showReviewForm, [productKey]: false });
+                          setNewReview({ ...newReview, [productKey]: { rating: 0, comment: '' } });
+                          alert('Avaliação enviada com sucesso!');
+                        } else {
+                          alert('Erro ao enviar avaliação. Tente novamente.');
+                        }
+                        
+                        setSubmittingReview({ ...submittingReview, [productKey]: false });
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Enviando...' : 'Enviar Avaliação'}
+                    </button>
+                    <button
+                      className={styles.cancelReviewButton}
+                      onClick={() => {
+                        setShowReviewForm({ ...showReviewForm, [productKey]: false });
+                        setNewReview({ ...newReview, [productKey]: { rating: 0, comment: '' } });
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
-                <div className={styles.avaliacaoComentario}>{av.comentario}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        */}
+              )}
+
+              {/* Lista de avaliações */}
+              {reviews.length > 0 ? (
+                <div className={styles.avaliacoesList}>
+                  {reviews.map((review) => (
+                    <div key={review.id} className={styles.avaliacaoItem}>
+                      <div className={styles.avaliacaoHeader}>
+                        <div className={styles.avaliacaoNome}>{review.userName}</div>
+                        <div className={styles.avaliacaoNota}>
+                          {[1,2,3,4,5].map(j => 
+                            j <= review.rating ? 
+                              <FaStar key={j} color="#f0b63d" size={16} /> : 
+                              <FaRegStar key={j} color="#f0b63d" size={16} />
+                          )}
+                        </div>
+                      </div>
+                      <div className={styles.avaliacaoComentario}>{review.comment}</div>
+                      <div className={styles.avaliacaoDate}>
+                        {review.createdAt instanceof Timestamp 
+                          ? new Date(review.createdAt.toMillis()).toLocaleDateString('pt-BR')
+                          : new Date(review.createdAt).toLocaleDateString('pt-BR')
+                        }
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className={styles.noReviews}>Ainda não há avaliações para este produto.</p>
+              )}
+            </div>
+          );
+        })}
         {/* Novo: Seção de Procedimento para Compra de Arma de Fogo */}
         <div className={styles.purchaseProcedureSection}>
           <h2>Procedimento Compra de Arma de Fogo</h2>
@@ -660,6 +1037,74 @@ export default function Carrinho() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Avaliações */}
+        {showReviewsModal && productReviews[showReviewsModal] && (
+          <div 
+            className={styles.reviewsModalOverlay}
+            onClick={() => setShowReviewsModal(null)}
+          >
+            <div 
+              className={styles.reviewsModal}
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                className={styles.reviewsModalCloseButton}
+                onClick={() => setShowReviewsModal(null)}
+              >
+                ×
+              </button>
+              <h2 className={styles.reviewsModalTitle}>
+                Avaliações - {(() => {
+                  const productKey = showReviewsModal;
+                  const item = cart.find(i => `${i.id || ''}_${i.name}` === productKey);
+                  return item?.name || 'Produto';
+                })()}
+              </h2>
+              <div className={styles.reviewsModalList}>
+                {productReviews[showReviewsModal].map((review) => {
+                  const reviewDate = review.createdAt instanceof Timestamp 
+                    ? new Date(review.createdAt.toMillis())
+                    : new Date(review.createdAt);
+                  return (
+                    <div key={review.id} className={styles.reviewsModalItem}>
+                      <div className={styles.reviewsModalItemHeader}>
+                        <div className={styles.reviewsModalItemUser}>
+                          <strong>{review.userName || 'Usuário'}</strong>
+                          <span className={styles.reviewsModalItemDate}>
+                            {reviewDate.toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        <div className={styles.reviewsModalItemRating}>
+                          {[1, 2, 3, 4, 5].map(star => (
+                            <span
+                              key={star}
+                              style={{
+                                color: star <= review.rating ? '#ffd700' : '#ccc',
+                                fontSize: '1.2rem'
+                              }}
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className={styles.reviewsModalItemComment}>
+                        {review.comment}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

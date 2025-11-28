@@ -56,7 +56,12 @@ export default function AdminPage() {
   const [orderDateEnd, setOrderDateEnd] = useState('');
   
   // Novo estado para controlar qual seção está ativa
-  const [activeSection, setActiveSection] = useState<'pedidos' | 'cadastrar' | 'produtos' | 'secoes'>('pedidos');
+  const [activeSection, setActiveSection] = useState<'pedidos' | 'cadastrar' | 'produtos' | 'secoes' | 'avaliacoes'>('pedidos');
+  
+  // Estados para avaliações
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewSearchTerm, setReviewSearchTerm] = useState('');
   
   // Estados para seções personalizadas
   const [isCustomSection, setIsCustomSection] = useState(false);
@@ -79,7 +84,10 @@ export default function AdminPage() {
   useEffect(() => {
     fetchRegisteredProducts();
     fetchCustomSections();
-  }, []);
+    if (activeSection === 'avaliacoes') {
+      fetchReviews();
+    }
+  }, [activeSection]);
 
   // Função para buscar seções personalizadas do Firebase
   const fetchCustomSections = async () => {
@@ -95,6 +103,50 @@ export default function AdminPage() {
       setCustomSectionsData(sectionsData);
     } catch (error) {
       console.error("Erro ao buscar seções personalizadas:", error);
+    }
+  };
+
+  // Função para buscar todas as avaliações
+  const fetchReviews = async () => {
+    setReviewsLoading(true);
+    try {
+      const reviewsRef = collection(db, "reviews");
+      const reviewsSnapshot = await getDocs(reviewsRef);
+      const reviewsData = reviewsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      // Ordenar por data (mais recentes primeiro)
+      const sortedReviews = reviewsData.sort((a, b) => {
+        const dateA = a.createdAt instanceof Timestamp ? a.createdAt.toMillis() : new Date(a.createdAt).getTime();
+        const dateB = b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : new Date(b.createdAt).getTime();
+        return dateB - dateA;
+      });
+      setReviews(sortedReviews);
+    } catch (error) {
+      console.error("Erro ao buscar avaliações:", error);
+      setMessage({ text: "Erro ao buscar avaliações", type: "error" });
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
+
+  // Função para excluir avaliação
+  const deleteReview = async (reviewId: string) => {
+    if (!confirm('Tem certeza que deseja excluir esta avaliação?')) {
+      return;
+    }
+    
+    try {
+      const reviewDoc = doc(db, "reviews", reviewId);
+      await deleteDoc(reviewDoc);
+      setReviews(reviews.filter(r => r.id !== reviewId));
+      setMessage({ text: "Avaliação excluída com sucesso!", type: "success" });
+      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+    } catch (error) {
+      console.error("Erro ao excluir avaliação:", error);
+      setMessage({ text: "Erro ao excluir avaliação", type: "error" });
+      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
     }
   };
 
@@ -729,6 +781,13 @@ export default function AdminPage() {
             <span className={styles.navIcon}>📁</span>
             <span className={styles.navLabel}>Gerenciar Seções</span>
           </button>
+          <button 
+            className={`${styles.navButton} ${activeSection === 'avaliacoes' ? styles.active : ''}`}
+            onClick={() => setActiveSection('avaliacoes')}
+          >
+            <span className={styles.navIcon}>⭐</span>
+            <span className={styles.navLabel}>Avaliações</span>
+          </button>
         </nav>
       </aside>
 
@@ -740,6 +799,7 @@ export default function AdminPage() {
             {activeSection === 'cadastrar' && '➕ Cadastrar Produto'}
             {activeSection === 'produtos' && '📋 Produtos Cadastrados'}
             {activeSection === 'secoes' && '📁 Gerenciar Seções'}
+            {activeSection === 'avaliacoes' && '⭐ Avaliações'}
           </h2>
           <div className={styles.welcome}>
             Bem-vindo, {user.email}!
@@ -1158,6 +1218,92 @@ export default function AdminPage() {
                 })
               )}
             </div>
+          </div>
+        )}
+
+        {/* Seção de Avaliações */}
+        {activeSection === 'avaliacoes' && (
+          <div className={styles.card}>
+            <h2>Avaliações dos Clientes</h2>
+            <div className={styles.reviewsSearchContainer}>
+              <div className={styles.searchInput}>
+                <FaSearch className={styles.searchIcon} />
+                <input
+                  type="text"
+                  placeholder="Buscar por produto ou cliente..."
+                  value={reviewSearchTerm}
+                  onChange={(e) => setReviewSearchTerm(e.target.value)}
+                  className={styles.searchInputField}
+                />
+              </div>
+            </div>
+            {reviewsLoading ? (
+              <p>Carregando avaliações...</p>
+            ) : reviews.length === 0 ? (
+              <p>Nenhuma avaliação encontrada.</p>
+            ) : (
+              <div className={styles.reviewsList}>
+                {reviews
+                  .filter(review => {
+                    if (!reviewSearchTerm) return true;
+                    const searchLower = reviewSearchTerm.toLowerCase();
+                    return (
+                      review.productName?.toLowerCase().includes(searchLower) ||
+                      review.userName?.toLowerCase().includes(searchLower) ||
+                      review.comment?.toLowerCase().includes(searchLower)
+                    );
+                  })
+                  .map((review) => {
+                    const reviewDate = review.createdAt instanceof Timestamp 
+                      ? new Date(review.createdAt.seconds * 1000)
+                      : new Date(review.createdAt);
+                    return (
+                      <div key={review.id} className={styles.reviewCard}>
+                        <div className={styles.reviewHeader}>
+                          <div className={styles.reviewProductInfo}>
+                            <h3>{review.productName || 'Produto não especificado'}</h3>
+                            <p className={styles.reviewUser}>Por: {review.userName || 'Usuário'}</p>
+                          </div>
+                          <div className={styles.reviewRating}>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span
+                                key={star}
+                                style={{
+                                  color: star <= review.rating ? '#ffd700' : '#ccc',
+                                  fontSize: '1.2rem'
+                                }}
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className={styles.reviewContent}>
+                          <p className={styles.reviewComment}>{review.comment}</p>
+                          <div className={styles.reviewFooter}>
+                            <span className={styles.reviewDate}>
+                              {reviewDate.toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                            <button
+                              className={styles.deleteReviewButton}
+                              onClick={() => deleteReview(review.id)}
+                              title="Excluir avaliação"
+                            >
+                              <FaTrash /> Excluir
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         )}
         </div>
