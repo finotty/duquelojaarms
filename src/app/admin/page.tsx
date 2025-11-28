@@ -112,10 +112,19 @@ export default function AdminPage() {
     try {
       const reviewsRef = collection(db, "reviews");
       const reviewsSnapshot = await getDocs(reviewsRef);
-      const reviewsData = reviewsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const reviewsData = reviewsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          productId: data.productId || '',
+          productName: data.productName || '',
+          userId: data.userId || '',
+          userName: data.userName || '',
+          rating: data.rating || 0,
+          comment: data.comment || '',
+          createdAt: data.createdAt || Timestamp.now()
+        };
+      });
       // Ordenar por data (mais recentes primeiro)
       const sortedReviews = reviewsData.sort((a, b) => {
         const dateA = a.createdAt instanceof Timestamp ? a.createdAt.toMillis() : new Date(a.createdAt).getTime();
